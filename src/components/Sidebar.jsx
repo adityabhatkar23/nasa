@@ -31,7 +31,7 @@ export default function Sidebar({ isApiKey, onApiKeyCleared }) {
 
       
       <aside className="hidden md:flex fixed top-0 left-0 w-64 h-full bg-zinc-950 shadow-md flex-col z-30">
-        <div className="p-6">
+        <div className="p-6 flex flex-col">
           <h2 className="text-2xl font-bold mb-6 text-zinc-200">NASA Dashboard</h2>
           <nav className="space-y-2">
             {navItems.map((item) => (
