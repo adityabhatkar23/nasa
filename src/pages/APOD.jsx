@@ -1,4 +1,10 @@
 import React, { useState, useEffect } from "react";
+import { formatDate } from '../utils';
+import Pagination from '../components/Pagination';
+import DateRangeForm from '../components/DateRangeForm';
+import Loading from '../components/Loading';
+import ErrorMessage from '../components/ErrorMessage';
+import SectionHeader from '../components/SectionHeader';
 
 const APOD = () => {
   const [specificDate, setSpecificDate] = useState("");
@@ -74,16 +80,6 @@ const APOD = () => {
     } else {
       fetchAPOD(); 
     }
-  };
-
-  const formatDate = (dateString) => {
-    if (!dateString) return "";
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { 
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric' 
-    });
   };
 
   const toggleDescription = (index) => {
@@ -213,66 +209,16 @@ const APOD = () => {
     </div>
   );
 
-  const renderPagination = () => {
-    if (totalPages <= 1) return null;
-
-    return (
-      <div className="flex items-center justify-center space-x-2 mt-6">
-       
-        <button
-          onClick={goToPreviousPage}
-          disabled={currentPage === 1}
-          className="px-3 py-2 rounded-lg bg-zinc-800 text-zinc-200 hover:bg-zinc-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          Previous
-        </button>
-
-       
-        <div className="flex items-center space-x-1">
-          {getPageNumbers().map((page, index) => (
-            <button
-              key={index}
-              onClick={() => typeof page === 'number' && goToPage(page)}
-              disabled={page === '...'}
-              className={`px-3 py-2 rounded-lg transition-colors ${
-                page === currentPage
-                  ? 'bg-zinc-700 text-white'
-                  : page === '...'
-                  ? 'text-zinc-400 cursor-default'
-                  : 'bg-zinc-800 text-zinc-200 hover:bg-zinc-700'
-              }`}
-            >
-              {page}
-            </button>
-          ))}
-        </div>
-
-        <button
-          onClick={goToNextPage}
-          disabled={currentPage === totalPages}
-          className="px-3 py-2 rounded-lg bg-zinc-800 text-zinc-200 hover:bg-zinc-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          Next
-        </button>
-      </div>
-    );
-  };
-
   const renderRangeAPOD = () => (
     <div className="w-full lg:w-3/4 space-y-4">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-zinc-200">APOD Collection</h1>
-        <div className="text-right">
-          <p className="text-zinc-300">
-            {apodRange.length} images from {formatDate(startDate)} to {formatDate(endDate)}
-          </p>
-          {totalPages > 1 && (
-            <p className="text-sm text-zinc-400">
-              Page {currentPage} of {totalPages} ({startIndex + 1}-{Math.min(endIndex, apodRange.length)} of {apodRange.length})
-            </p>
-          )}
-        </div>
-      </div>
+      <SectionHeader
+        title="APOD Collection"
+        count={`${apodRange.length} images from ${formatDate(startDate)} to ${formatDate(endDate)}`}
+        currentPage={currentPage}
+        totalPages={totalPages}
+        startIndex={startIndex}
+        endIndex={Math.min(endIndex, apodRange.length)}
+      />
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {currentApods.map((apod, index) => {
@@ -340,11 +286,22 @@ const APOD = () => {
       </div>
 
       
-      {renderPagination()}
+      <Pagination
+        totalPages={totalPages}
+        currentPage={currentPage}
+        goToPage={goToPage}
+        goToPreviousPage={goToPreviousPage}
+        goToNextPage={goToNextPage}
+        getPageNumbers={getPageNumbers}
+      />
     </div>
   );
 
   if (loading) {
+    return <Loading message="Loading APOD..." />;
+  }
+
+  if (error) {
     return (
       <div className="bg-neutral-950 h-full w-full lg:p-6 p-3 mt-16 lg:mt-0 rounded-2xl flex items-center justify-center">
         <div className="text-center">
@@ -379,60 +336,17 @@ const APOD = () => {
       <div className="bg-neutral-900 p-3 lg:p-6 w-full lg:w-1/4 rounded-lg space-y-4">
         <h1 className="text-2xl font-bold text-zinc-200">APOD Options</h1>
         
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="flex flex-col gap-2">
-            <label className="text-zinc-300 font-medium">Specific Date</label>
-            <input
-              className="text-white bg-zinc-800 border border-zinc-600 py-3 rounded-lg px-3 w-full focus:outline-none focus:border-zinc-400 transition-colors"
-              type="date"
-              value={specificDate}
-              onChange={(e) => {
-                setSpecificDate(e.target.value);
-                setStartDate("");
-                setEndDate("");
-              }}
-              max={new Date().toISOString().split('T')[0]}
-            />
-          </div>
-          
-          <div className="text-center text-zinc-400 text-sm">OR</div>
-          
-          <div className="flex flex-col gap-2">
-            <label className="text-zinc-300 font-medium">Start Date</label>
-            <input
-              className="text-white bg-zinc-800 border border-zinc-600 py-3 rounded-lg px-3 w-full focus:outline-none focus:border-zinc-400 transition-colors"
-              type="date"
-              value={startDate}
-              onChange={(e) => {
-                setStartDate(e.target.value);
-                setSpecificDate("");
-              }}
-              max={new Date().toISOString().split('T')[0]}
-            />
-          </div>
-          
-          <div className="flex flex-col gap-2">
-            <label className="text-zinc-300 font-medium">End Date</label>
-            <input
-              className="text-white bg-zinc-800 border border-zinc-600 py-3 rounded-lg px-3 w-full focus:outline-none focus:border-zinc-400 transition-colors"
-              type="date"
-              value={endDate}
-              onChange={(e) => {
-                setEndDate(e.target.value);
-                setSpecificDate("");
-              }}
-              max={new Date().toISOString().split('T')[0]}
-            />
-          </div>
-          
-          <button 
-            type="submit"
-            className="bg-zinc-800 w-full py-3 rounded-lg cursor-pointer font-medium hover:bg-zinc-700 transition-colors text-zinc-200"
-            disabled={loading}
-          >
-            {loading ? "Loading..." : "Fetch APOD"}
-          </button>
-        </form>
+        <DateRangeForm
+          specificDate={specificDate}
+          startDate={startDate}
+          endDate={endDate}
+          onSpecificDateChange={e => { setSpecificDate(e.target.value); setStartDate(""); setEndDate(""); }}
+          onStartDateChange={e => { setStartDate(e.target.value); setSpecificDate(""); }}
+          onEndDateChange={e => { setEndDate(e.target.value); setSpecificDate(""); }}
+          onSubmit={handleSubmit}
+          loading={loading}
+          submitLabel="Fetch APOD"
+        />
         
         <div className="pt-4 border-t border-zinc-700">
           <button 
