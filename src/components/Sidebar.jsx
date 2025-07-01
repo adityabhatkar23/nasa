@@ -5,7 +5,7 @@ import { NavLink } from "react-router-dom";
 const navItems = [
   { name: "APOD", path: "/" },
   { name: "NEO", path: "/neo" },
-  { name: "Tech Transfer", path: "/tech" },
+  { name: "Mars Rover Photos", path: "/rover" },
 ];
 
 export default function Sidebar({ isApiKey, onApiKeyCleared }) {

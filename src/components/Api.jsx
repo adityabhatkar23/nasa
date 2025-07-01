@@ -3,7 +3,7 @@ import { useState } from "react";
 
 const Api = ({ onApiKeySaved }) => {
   const [copied, setCopied] = useState(false);
-  const text = "gaCPPaW0CEkZK1lpls0CDBTbXOZz7eIxh06Rrd62";
+  const text = "ZUiJgum5nqZfDWMpsbkPMr6OsY7UJyt0b5LOet4X";
 
   const handleCopy = () => {
     navigator.clipboard.writeText(text);

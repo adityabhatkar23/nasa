@@ -4,7 +4,7 @@ import APOD from "./pages/APOD";
 import Sidebar from "./components/Sidebar";
 import { BrowserRouter, Routes,Route } from "react-router-dom";
 import NEO from "./pages/NEO";
-import TechTransfer from "./pages/TechTransfer";
+import Rover from "./pages/Rover";
 
 export default function App() {
   const [isApiKey, setIsApiKey] = useState(false)
@@ -37,7 +37,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<APOD />} />
           <Route path="/neo" element={<NEO />} />
-          <Route path="/tech" element={<TechTransfer />} />
+          <Route path="/rover" element={<Rover />} />
         </Routes>
        )}
       </main>
