@@ -6,6 +6,7 @@ const navItems = [
   { name: "APOD", path: "/" },
   { name: "NEO", path: "/neo" },
   { name: "Mars Rover Photos", path: "/rover" },
+  { name: "EPIC Earth", path: "/epic" },
 ];
 
 export default function Sidebar({ isApiKey, onApiKeyCleared }) {

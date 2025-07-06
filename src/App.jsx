@@ -5,6 +5,7 @@ import Sidebar from "./components/Sidebar";
 import { BrowserRouter, Routes,Route } from "react-router-dom";
 import NEO from "./pages/NEO";
 import Rover from "./pages/Rover";
+import EPIC from "./pages/EPIC";
 
 export default function App() {
   const [isApiKey, setIsApiKey] = useState(false)
@@ -38,6 +39,7 @@ export default function App() {
           <Route path="/" element={<APOD />} />
           <Route path="/neo" element={<NEO />} />
           <Route path="/rover" element={<Rover />} />
+          <Route path="/epic" element={<EPIC />} />
         </Routes>
        )}
       </main>
